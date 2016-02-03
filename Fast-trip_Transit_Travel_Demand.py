@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import datetime
 
-hdf5_file_path= 'C:/Users/Angela/Documents/Fast_Trip/daysim_outputs_2010.h5'
+hdf5_file_path= 'C:/daysim_outputs_2010.h5' 
 #Daysim outputs:
 my_store = h5py.File(hdf5_file_path, "r+")
 #Build the dataframe
