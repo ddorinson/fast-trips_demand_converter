@@ -52,37 +52,41 @@ zones = list(range(3751, 4001))
 
 def trip_list(transit_mode_id, eligible_zones_list):
 
+    #only focus on transit trips
+    transit_table = trip_table.loc[trip_table['Mode'] == transit_mode_id]
+    print len(transit_table)
     #Transfer departure and arrive time into HH:MM:SS form
     dep_time_arr = []
     arr_time_arr = []
-    for ele in trip_table['deptm']: 
+    for ele in transit_table['deptm']: 
         dep_time_arr.append(time(ele))
-    for ele in trip_table['arrtm']: 
+    for ele in transit_table['arrtm']: 
         arr_time_arr.append(time(ele))
-    trip_table['departure_time'] = dep_time_arr
-    trip_table['arrival_time'] = arr_time_arr
+    transit_table['departure_time'] = dep_time_arr
+    transit_table['arrival_time'] = arr_time_arr
     
-    #pnr for Only Os and Ds that are eligible:
+    #PNR for Only Os and Ds that are eligible:
     mode_id_o = mode_id(1,eligible_zones_list)
     mode_id_d = mode_id(2,eligible_zones_list)
-    trip_table['mode_Orig'] = trip_table['o_taz'].map(mode_id_o)
-    trip_table['mode_Dest'] = trip_table['d_taz'].map(mode_id_d)
-    trip_table['mode_id'] = trip_table.apply(lambda row: (row['mode_Orig'] + row['mode_Dest']), axis=1)
-    trip_table['mode'] = trip_table['mode_id'].map({0: 'walk-transit-walk', 1:'PNR-transit-walk', 2:'walk-transit-PNR'})
-    trip_table.drop(['mode_Orig','mode_Dest', 'mode_id'], axis=1)
+    transit_table['mode_Orig'] = transit_table['o_taz'].map(mode_id_o)
+    transit_table['mode_Dest'] = transit_table['d_taz'].map(mode_id_d)
+    transit_table['mode_id'] = transit_table.apply(lambda row: (row['mode_Orig'] + row['mode_Dest']), axis=1)
+    transit_table['mode'] = transit_table['mode_id'].map({0: 'walk-transit-walk', 1:'PNR-transit-walk', 2:'walk-transit-PNR'})
+    transit_table.drop(['mode_Orig','mode_Dest', 'mode_id'], axis=1)
 
     ##Query for time of day and mode
     #qstring = 'deptm >= ' + str(min_depart_time) + ' and deptm <= ' + str(max_depart_time) + ' and mode == ' + str(transit_mode_id)
     #trip_table = trip_table.query(qstring)
 
     #Add some columns that are required for FAST-TrIPs
-    trip_table['time_target'] = 'arrival'
+    transit_table['time_target'] = 'arrival'
     #trip_table['person_id'] = np.arange(1, len(trip_table) + 1)
-    trip_table['person_id'] = trip_table.hh_id.astype(str) + '_' + trip_table.pno.astype(str)
-    return trip_table
+    transit_table['person_id'] = transit_table.hh_id.astype(str) + '_' + transit_table.pno.astype(str)
+    return transit_table
 
 transit_trips = trip_list(6, zones)
-transit_trips.to_csv(r'H:\fast trip\trip_list.txt', columns = ['person_id', 'o_taz', 'd_taz', 'mode', 'purpose', 'departure_time', 'arrival_time', 'time_target', 'vot'], index = False, sep='\t') 
+transit_trips.to_csv(r'H:\fast trip\Soundcast_fastttrips_demand_v0.1\trip_list.txt', columns = ['person_id', 'o_taz', 'd_taz', 'mode', 'purpose', 'departure_time', 'arrival_time', 'time_target', 'vot'], index = False, sep=',') 
+print len(transit_trips)
 
 ################Prepare for person.txt################
 
@@ -109,8 +113,8 @@ person_table['work_at_home'] = work_at_home
 person_table['multiple_jobs'] = 'none'
 person_table['disability'] = 'none'
 
-person_table.to_csv(r'H:\fast trip\person.txt', columns = ['person_id', 'hh_id', 'age', 'gender', 'work_status', 'work_at_home', 'multiple_jobs', 'transit_pass', 'disability'], index = False, sep='\t') 
-
+person_table.to_csv(r'H:\fast trip\Soundcast_fastttrips_demand_v0.1\person.txt', columns = ['person_id', 'hh_id', 'age', 'gender', 'work_status', 'work_at_home', 'multiple_jobs', 'transit_pass', 'disability'], index = False, sep=',') 
+print len(person_table)
 
 ###################Prepare for hosuehold.txt##################
 
@@ -132,7 +136,8 @@ person_type_condi = {'hh_presch': (person_table['age'] <= 4), 'hh_grdsch': ((per
 for type_key in person_type_condi: 
     houshold_table = person_type(person_type_condi[type_key], type_key)
 
-household_table.to_csv(r'H:\fast trip\household.txt', columns = ['hh_id', 'hh_vehicles', 'hh_income', 'hh_size', 'hh_workers', 'hh_presch', 'hh_grdsch', 'hh_hghsch', 'hh_elders'], index = False, sep='\t')
+household_table.to_csv(r'H:\fast trip\Soundcast_fastttrips_demand_v0.1\household.txt', columns = ['hh_id', 'hh_vehicles', 'hh_income', 'hh_size', 'hh_workers', 'hh_presch', 'hh_grdsch', 'hh_hghsch', 'hh_elders'], index = False, sep=',')
+print len(household_table)
 
 print 'done'
 
