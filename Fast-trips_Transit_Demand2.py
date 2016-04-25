@@ -3,9 +3,15 @@ import numpy as np
 import pandas as pd
 import datetime
 
-hdf5_file_path= 'C:/Users/Angela/Documents/Fast_Trip/daysim_outputs_2010.h5' 
+SOUNDCAST_DEMAND = r'C:/Users/Angela/Documents/Daysim/daysim_outputs_2010.h5'
+OUTPUT_PATH = r'H:/FastTrips/'
+HOUSEHOLD_OUTFILE = os.path.join(OUTPUT_PATH, 'household.txt')
+PERSON_OUTFILE =  os.path.join(OUTPUT_PATH, 'person.txt')
+TRIPLIST_OUTFILE= os.path.join(OUTPUT_PATH, 'trip_list.txt')
+
+
 #Daysim outputs:
-my_store = h5py.File(hdf5_file_path, "r+")
+my_store = h5py.File(SOUNDCAST_DEMAND, "r+")
 #Build the dataframe
 def build_df(set_name, set_fields_dict):
      daysim_set = my_store[set_name]
@@ -19,9 +25,27 @@ def build_df(set_name, set_fields_dict):
      return set_table
 
 #Get the fields we need from the trip table, create new field names for FAST-TrIPs
-trip_fields_dict = {'pno' : 'pno', 'hh_id' : 'hhno', 'o_taz': 'otaz', 'd_taz' : 'dtaz', 'Mode' : 'mode','purpose' : 'dpurp', 'deptm': 'deptm', 'arrtm' : 'arrtm', 'vot' : 'vot'}
-person_fields_dict = {'pno': 'pno', 'hh_id' : 'hhno', 'age' : 'pagey', 'pgend' : 'pgend', 'pwtyp': 'pwtyp', 'wpcl' : 'pwpcl', 'transit_pass' : 'ptpass'}
-household_fields_dict = {'hh_id' : 'hhno', 'hh_vehicles' : 'hhvehs', 'hh_income' : 'hhincome', 'hh_size': 'hhsize', 'hpcl' : 'hhparcel'}
+trip_fields_dict = {'pno' : 'pno', 
+                    'hh_id' : 'hhno', 
+                    'o_taz': 'otaz', 
+                    'd_taz' : 'dtaz', 
+                    'Mode' : 'mode',
+                    'purpose' : 'dpurp', 
+                    'deptm': 'deptm', 
+                    'arrtm' : 'arrtm', 
+                    'vot' : 'vot'}
+person_fields_dict = {'pno': 'pno', 
+                      'hh_id' : 'hhno', 
+                      'age' : 'pagey', 
+                      'pgend' : 'pgend', 
+                      'pwtyp': 'pwtyp', 
+                      'wpcl' : 'pwpcl', 
+                      'transit_pass' : 'ptpass'}
+household_fields_dict = {'hh_id' : 'hhno', 
+                         'hh_vehicles' : 'hhvehs', 
+                         'hh_income' : 'hhincome', 
+                         'hh_size': 'hhsize', 
+                         'hpcl' : 'hhparcel'}
 trip_table = build_df('Trip', trip_fields_dict)
 print trip_table.head()
 person_table = build_df('Person', person_fields_dict)
@@ -94,7 +118,10 @@ def trip_list(transit_mode_id, eligible_zones_list, min_depart_time, max_depart_
 
 
 transit_trips = trip_list(6, zones, 360, 540,'AM')
-transit_trips.to_csv(r'C:\Users\Angela\Documents\GitHub\fast-trips\Examples\psrc\demand\new_trip_list.txt', columns = ['person_id', 'o_taz', 'd_taz', 'mode', 'purpose', 'departure_time', 'arrival_time', 'timePeriod', 'time_target', 'vot'], index = False, sep=',') 
+transit_trips_cols = ['person_id', 'o_taz', 'd_taz', 'mode', 'purpose', 'departure_time', 'arrival_time', 'timePeriod', 'time_target', 'vot']
+transit_trips.to_csv(TRIPLIST_OUTFILE, 
+                     columns = transit_trips_cols, 
+                     index = False, sep=',') 
 print len(transit_trips)
 
 ################Prepare for person.txt################
@@ -122,7 +149,10 @@ person_table['work_at_home'] = work_at_home
 person_table['multiple_jobs'] = 'none'
 person_table['disability'] = 'none'
 
-person_table.to_csv(r'H:\fast trip\Soundcast_fastttrips_demand_v0.1\person.txt', columns = ['person_id', 'hh_id', 'age', 'gender', 'work_status', 'work_at_home', 'multiple_jobs', 'transit_pass', 'disability'], index = False, sep=',') 
+person_table_cols = ['person_id', 'hh_id', 'age', 'gender', 'work_status', 'work_at_home', 'multiple_jobs', 'transit_pass', 'disability']
+person_table.to_csv(PERSON_OUTFILE, 
+                    columns = person_table_cols, 
+                    index = False, sep=',') 
 print len(person_table)
 
 ###################Prepare for hosuehold.txt##################
@@ -141,11 +171,18 @@ def person_type(condition, typle):
     #return household_table
     print np.unique(np.array(household_table[typle]))
 
-person_type_condi = {'hh_presch': (person_table['age'] <= 4), 'hh_grdsch': ((person_table['age'] > 4) & (person_table['age'] <= 15)), 'hh_hghsch': ((person_table['age'] > 15) & (person_table['age'] <= 17)),  'hh_workers': (person_table['work_status'] > 0), 'hh_elders': (person_table['age'] >= 65)}
+person_type_condi = {'hh_presch': (person_table['age'] <= 4), 
+                     'hh_grdsch': ((person_table['age'] > 4) & (person_table['age'] <= 15)), 
+                     'hh_hghsch': ((person_table['age'] > 15) & (person_table['age'] <= 17)),  
+                     'hh_workers': (person_table['work_status'] > 0), 
+                     'hh_elders': (person_table['age'] >= 65)}
 for type_key in person_type_condi: 
     houshold_table = person_type(person_type_condi[type_key], type_key)
 
-household_table.to_csv(r'H:\fast trip\Soundcast_fastttrips_demand_v0.1\household.txt', columns = ['hh_id', 'hh_vehicles', 'hh_income', 'hh_size', 'hh_workers', 'hh_presch', 'hh_grdsch', 'hh_hghsch', 'hh_elders'], index = False, sep=',')
+household_table_cols = ['hh_id', 'hh_vehicles', 'hh_income', 'hh_size', 'hh_workers', 'hh_presch', 'hh_grdsch', 'hh_hghsch', 'hh_elders']
+household_table.to_csv(HOUSEHOLD_OUTFILE, 
+                       columns = household_table_cols, 
+                       index = False, sep=',')
 print len(household_table)
 
 print 'done'
