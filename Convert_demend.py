@@ -8,6 +8,7 @@ OUTPUT_PATH = r'H:/FastTrips/'
 HOUSEHOLD_OUTFILE = os.path.join(OUTPUT_PATH, 'household.txt')
 PERSON_OUTFILE =  os.path.join(OUTPUT_PATH, 'person.txt')
 TRIPLIST_OUTFILE= os.path.join(OUTPUT_PATH, 'trip_list.txt')
+transit_mode = 6
 trip_begin_time = 360
 trip_end_time = 540
 time_zone = 'AM'
