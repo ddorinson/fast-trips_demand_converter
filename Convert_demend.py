@@ -8,7 +8,9 @@ OUTPUT_PATH = r'H:/FastTrips/'
 HOUSEHOLD_OUTFILE = os.path.join(OUTPUT_PATH, 'household.txt')
 PERSON_OUTFILE =  os.path.join(OUTPUT_PATH, 'person.txt')
 TRIPLIST_OUTFILE= os.path.join(OUTPUT_PATH, 'trip_list.txt')
-
+trip_begin_time = 360
+trip_end_time = 540
+time_zone = 'AM'
 
 #Daysim outputs:
 my_store = h5py.File(SOUNDCAST_DEMAND, "r+")
@@ -117,7 +119,7 @@ def trip_list(transit_mode_id, eligible_zones_list, min_depart_time, max_depart_
     return transit_table
 
 
-transit_trips = trip_list(6, zones, 360, 540,'AM')
+transit_trips = trip_list(transit_mode, zones, trip_begin_time, trip_end_time, time_zone)
 transit_trips_cols = ['person_id', 'o_taz', 'd_taz', 'mode', 'purpose', 'departure_time', 'arrival_time', 'timePeriod', 'time_target', 'vot']
 transit_trips.to_csv(TRIPLIST_OUTFILE, 
                      columns = transit_trips_cols, 
