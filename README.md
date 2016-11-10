@@ -26,4 +26,5 @@ The outcome saved at [Soundcast_fasttrips_demand_version0.1.zip](https://app.box
 # Credits
 This is based on a script originally written by [Lisa Zorn](https://github.com/lmz) and [Alireza Khani](https://github.com/akhani) in 2012:
 `Q:\Model Development\FastTrips\Demand.CHAMP\ft_CHAMPdemandGenerator.py`
+
 This task also referred to the parallel project [SF-CHAMP to Fast-Trips Demand Data Converter](https://github.com/sfcta/fast-trips_demand_converter) completed by [Bhargava Sana](https://github.com/bhargavasana) 
