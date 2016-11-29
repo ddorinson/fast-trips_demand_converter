@@ -25,6 +25,7 @@ The outcome saved at [Soundcast_fasttrips_demand_version0.1.zip](https://app.box
 
 # Credits
 This is based on a script originally written by [Lisa Zorn](https://github.com/lmz) and [Alireza Khani](https://github.com/akhani) in 2012:
-`Q:\Model Development\FastTrips\Demand.CHAMP\ft_CHAMPdemandGenerator.py`
+`Q:\Model Development\FastTrips\Demand.CHAMP\ft_CHAMPdemandGenerator.py` - this is an internal reference
 
-
+# License
+This project is licensed under the [Apache 2.0] (https://github.com/osplanning-data-standards/dyno-demand/blob/master/LICENSE)
