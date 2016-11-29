@@ -12,10 +12,10 @@ The parallel project [SF-CHAMP to Fast-Trips Demand Data Converter](https://gith
 
 # Getting started
 
-`Convert_demand.py`
+ `Convert_demand.py` is tested by Python 2.7.11 | Anaconda 2.2.0 (64-bit) | [MSC v1500 64 bit (AMD64)] on win32, and requests following library: h5py, numpy, pandas, datetime. 
 
-Reads:     `daysim_outputs_2010.h5` (PSRC Daysim trip file in HDF5 format)  
-Writes:    Input demand to [Fast-Trips](https://github.com/MetropolitanTransportationCommission/fast-trips) in [Dyno-Demand](https://github.com/osplanning-data-standards/dyno-demand) format:  
+The script reads:     `daysim_outputs_2010.h5` (PSRC Daysim trip file in HDF5 format)  
+The script writes:    Input demand to [Fast-Trips](https://github.com/MetropolitanTransportationCommission/fast-trips) in [Dyno-Demand](https://github.com/osplanning-data-standards/dyno-demand) format:  
  - [`household.txt`](https://github.com/osplanning-data-standards/dyno-demand/blob/master/files/household.md)
  - [`person.txt`](https://github.com/osplanning-data-standards/dyno-demand/blob/master/files/person.md)
  - [`trip_list.txt`](https://github.com/osplanning-data-standards/dyno-demand/blob/master/files/trip_list.md) 
