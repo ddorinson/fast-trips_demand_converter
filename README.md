@@ -28,4 +28,4 @@ This is based on a script originally written by [Lisa Zorn](https://github.com/l
 `Q:\Model Development\FastTrips\Demand.CHAMP\ft_CHAMPdemandGenerator.py` - this is an internal reference
 
 # License
-This project is licensed under the [Apache 2.0] (https://github.com/osplanning-data-standards/dyno-demand/blob/master/LICENSE)
+This project is licensed under the [Apache 2.0] (https://github.com/psrc/fast-trips_demand_converter/blob/master/LICENSE.md)
